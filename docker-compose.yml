@@ -1,0 +1,9 @@
+version: "3.8"
+services:
+  db2_exporter:
+    image: ghcr.io/notyusta/db2exporter:dev
+    environment:
+      DSN: "YOUR_DSN"
+      DB: "YOUR_DB"
+    ports:
+      - "9953:9553"
