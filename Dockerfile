@@ -8,7 +8,7 @@ ENV CGO_LDFLAGS="-L${IBM_DB_HOME}/lib"
 
 # Install dependencies, IBM CLI, Go, build exporter, and clean up in one layer
 RUN apt-get update -y && \
-    apt-get install -y curl libxml2-dev make git bash build-essential && \
+    apt-get install -y curl libxml2-dev git build-essential && \
     # Install Go
     curl -sL https://go.dev/dl/go1.24.3.linux-amd64.tar.gz | tar -xz -C /usr/local && \
     # Install IBM CLI
@@ -20,10 +20,9 @@ RUN apt-get update -y && \
     cd ibm-db2-prometheus-exporter && \
     go get github.com/ibmdb/go_ibm_db@latest && \
     go mod tidy && \
-    make exporter && \
-    mv bin/* /bin/ibm_db2_exporter && \
+    go build -o /bin/ibm_db2_exporter ./cmd/ibm-db2-exporter/main.go && \
     # Cleanup
-    apt-get remove make git -y build-essential && \
+    apt-get remove -y git build-essential && \
     cd / && rm -rf ibm-db2-prometheus-exporter /usr/local/go /var/lib/apt/lists/* /tmp/*
 
 # Copy scripts
